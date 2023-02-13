@@ -61,6 +61,9 @@ class Worker(QRunnable):
             self.signals.finished.emit()  # Done
 
 class MainWindow(QMainWindow):
+    showHaveFlag = True
+    showWantedFlag = True
+
     def __init__(self):
         global REBRICKABLE_API_KEY
         super(MainWindow, self).__init__()
@@ -79,8 +82,37 @@ class MainWindow(QMainWindow):
 
         self.ui.rebrickableKeyText.setText(REBRICKABLE_API_KEY)
         self.ui.rebrickableKeyText.editingFinished.connect(self.setRebrickableKey)
-
+        self.ui.actionBoth.triggered.connect(self.showBoth)
+        self.ui.actionWanted.triggered.connect(self.showWanted)
+        self.ui.actionHave.triggered.connect(self.showHave)
         self.setTextChanged()
+
+    def showBoth(self):
+        self.ui.actionBoth.setChecked(True)
+        self.ui.actionHave.setChecked(False)
+        self.ui.actionWanted.setChecked(False)
+        for part in self.set_pieces:
+                part.widget.show()
+    
+    def showWanted(self):
+        self.ui.actionBoth.setChecked(False)
+        self.ui.actionHave.setChecked(False)
+        self.ui.actionWanted.setChecked(True)
+        for part in self.set_pieces:
+            if part.qty != part.spinbox.value():
+                part.widget.show()
+            else:
+                part.widget.hide()
+
+    def showHave(self):
+        self.ui.actionBoth.setChecked(False)
+        self.ui.actionHave.setChecked(True)
+        self.ui.actionWanted.setChecked(False)
+        for part in self.set_pieces:
+            if part.qty == part.spinbox.value():
+                part.widget.show()
+            else:
+                part.widget.hide()
 
     def setRebrickableKey(self):
         with open('rebrickable.key', 'w') as f:

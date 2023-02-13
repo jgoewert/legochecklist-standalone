@@ -31,6 +31,7 @@ QSpinBox::up-button  {
 
     widget = None
     part_width = 200
+    spinbox = None
 
     def __init__(self, num, color, img, qty, name):
         self.num = num
@@ -49,13 +50,13 @@ QSpinBox::up-button  {
         haveLabel = QLabel("Have")
         haveLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         block.addWidget(haveLabel,2,1)
-        spinbox = QSpinBox()
-        spinbox.setMaximum(self.qty)
-        spinbox.valueChanged.connect(self.spinboxchanged)
-        spinbox.setStyleSheet(self.stylesheet)
-        spinbox.setMaximumWidth(100)
-        spinbox.setAlignment(Qt.AlignmentFlag.AlignHCenter)
-        block.addWidget(spinbox,3,1)
+        self.spinbox = QSpinBox()
+        self.spinbox.setMaximum(self.qty)
+        self.spinbox.valueChanged.connect(self.spinboxchanged)
+        self.spinbox.setStyleSheet(self.stylesheet)
+        self.spinbox.setMaximumWidth(100)
+        self.spinbox.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        block.addWidget(self.spinbox,3,1)
         
         self.widget = QWidget()
         self.widget.setStyleSheet("background-color: white;")

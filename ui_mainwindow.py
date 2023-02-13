@@ -27,10 +27,14 @@ class Ui_MainWindow(object):
         MainWindow.resize(1760, 1035)
         self.actionWanted = QAction(MainWindow)
         self.actionWanted.setObjectName(u"actionWanted")
+        self.actionWanted.setCheckable(True)
         self.actionHave = QAction(MainWindow)
         self.actionHave.setObjectName(u"actionHave")
+        self.actionHave.setCheckable(True)
         self.actionBoth = QAction(MainWindow)
         self.actionBoth.setObjectName(u"actionBoth")
+        self.actionBoth.setCheckable(True)
+        self.actionBoth.setChecked(True)
         self.actionPrint = QAction(MainWindow)
         self.actionPrint.setObjectName(u"actionPrint")
         self.actionSave = QAction(MainWindow)
@@ -62,6 +66,17 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.statusLabel, 2, 0, 1, 2)
 
+        self.setText = QLineEdit(self.centralwidget)
+        self.setText.setObjectName(u"setText")
+        self.setText.setMaximumSize(QSize(16777215, 20))
+
+        self.gridLayout.addWidget(self.setText, 1, 1, 1, 1)
+
+        self.rebrickableKeyText = QLineEdit(self.centralwidget)
+        self.rebrickableKeyText.setObjectName(u"rebrickableKeyText")
+
+        self.gridLayout.addWidget(self.rebrickableKeyText, 0, 1, 1, 1)
+
         self.partsScrollArea = QScrollArea(self.centralwidget)
         self.partsScrollArea.setObjectName(u"partsScrollArea")
         self.partsScrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
@@ -73,17 +88,6 @@ class Ui_MainWindow(object):
         self.partsScrollArea.setWidget(self.partsWidget)
 
         self.gridLayout.addWidget(self.partsScrollArea, 3, 0, 1, 2)
-
-        self.rebrickableKeyText = QLineEdit(self.centralwidget)
-        self.rebrickableKeyText.setObjectName(u"rebrickableKeyText")
-
-        self.gridLayout.addWidget(self.rebrickableKeyText, 0, 1, 1, 1)
-
-        self.setText = QLineEdit(self.centralwidget)
-        self.setText.setObjectName(u"setText")
-        self.setText.setMaximumSize(QSize(16777215, 20))
-
-        self.gridLayout.addWidget(self.setText, 1, 1, 1, 1)
 
 
         self.gridLayout_3.addLayout(self.gridLayout, 1, 0, 2, 1)
