@@ -53,6 +53,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.rebrickableKeyLabel, 0, 0, 1, 1)
 
+        self.rebrickableKeyText = QLineEdit(self.centralwidget)
+        self.rebrickableKeyText.setObjectName(u"rebrickableKeyText")
+        self.gridLayout.addWidget(self.rebrickableKeyText, 0, 1, 1, 1)
+
         self.setLabel = QLabel(self.centralwidget)
         self.setLabel.setObjectName(u"setLabel")
         self.setLabel.setMaximumSize(QSize(16777215, 20))
@@ -71,11 +75,6 @@ class Ui_MainWindow(object):
         self.setText.setMaximumSize(QSize(16777215, 20))
 
         self.gridLayout.addWidget(self.setText, 1, 1, 1, 1)
-
-        self.rebrickableKeyText = QLineEdit(self.centralwidget)
-        self.rebrickableKeyText.setObjectName(u"rebrickableKeyText")
-
-        self.gridLayout.addWidget(self.rebrickableKeyText, 0, 1, 1, 1)
 
         self.partsScrollArea = QScrollArea(self.centralwidget)
         self.partsScrollArea.setObjectName(u"partsScrollArea")

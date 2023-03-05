@@ -175,3 +175,5 @@ poetry.toml
 /images
 /images/*
 rebrickable.key
+/bricklink-wantlists
+/rebrickable-wantlists

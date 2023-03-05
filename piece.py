@@ -32,13 +32,18 @@ QSpinBox::up-button  {
     widget = None
     part_width = 200
     spinbox = None
+    qtyhave = 0
 
-    def __init__(self, num, color, img, qty, name):
+    def __init__(self, num, color, img, qty, name, colorid, bricklinkid, bricklinkcolorid):
         self.num = num
         self.name = name
         self.color = color
         self.img = img
         self.qty = qty
+        self.qtyhave = 0
+        self.colorid = colorid
+        self.bricklinkid = bricklinkid
+        self.bricklinkcolorid = bricklinkcolorid
         block = QGridLayout()
         block.addWidget(QLabel(self.num + " - " + self.name),0,0,1,2)
         partImage = self.getPixmap()
@@ -81,7 +86,8 @@ QSpinBox::up-button  {
         return imgicon
 
     def spinboxchanged(self, value_as_int):
-        if value_as_int == self.qty:
+        self.qtyhave = value_as_int
+        if  self.qtyhave == self.qty:
             self.widget.setStyleSheet("background-color: green;")
         else:
             self.widget.setStyleSheet("background-color: white;")

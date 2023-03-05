@@ -4,6 +4,8 @@ from PySide6.QtCore import QRunnable, Slot, Signal, QObject, QThreadPool
 import requests
 import json
 import os, os.path
+
+from xml.dom import minidom
 from ui_mainwindow import Ui_MainWindow
 import traceback
 
@@ -85,14 +87,70 @@ class MainWindow(QMainWindow):
         self.ui.actionBoth.triggered.connect(self.showBoth)
         self.ui.actionWanted.triggered.connect(self.showWanted)
         self.ui.actionHave.triggered.connect(self.showHave)
+        self.ui.actionExport.triggered.connect(self.exportRebrickableCSV)
+        self.ui.actionSave.triggered.connect(self.exportBricklinkXml)
         self.setTextChanged()
+
+    def exportRebrickableCSV(self):
+        if not os.path.exists("rebrickable-wantlists"):
+            os.mkdir("rebrickable-wantlists")
+
+        filename = "rebrickable-wantlists/" + self.ui.setText.text() + ".csv"
+        with open(filename, "w") as f:
+            f.write("Part,Color,Quantity\n")
+            for part in self.set_pieces:
+                if ((part.qty - part.qtyhave) > 0):
+                    f.writelines("{},{},{}\n".format(str(part.bricklinkid), str(part.colorid), str(part.qty - part.qtyhave)))
+
+
+    def exportBricklinkXml(self):
+        if not os.path.exists("bricklink-wantlists"):
+            os.mkdir("bricklink-wantlists")
+        
+        root = minidom.Document()
+        inventoryNode = root.createElement('INVENTORY')
+        root.appendChild(inventoryNode)
+
+        wantedListId = root.createElement('WANTEDLISTID')
+        wantedListId.appendChild(root.createTextNode(self.ui.setText.text()))
+        inventoryNode.appendChild(wantedListId)
+        
+        for part in self.set_pieces:
+            partChild = root.createElement('ITEM')
+            
+            node = root.createElement('ITEMTYPE')
+            node.appendChild(root.createTextNode("P"))
+            partChild.appendChild(node)
+            
+            node = root.createElement('ITEMID')
+            node.appendChild(root.createTextNode(str(part.bricklinkid)))
+            partChild.appendChild(node)
+
+            node = root.createElement('COLOR')
+            node.appendChild(root.createTextNode(str(part.bricklinkcolorid)))
+            partChild.appendChild(node)
+
+            node = root.createElement('MINQTY')
+            node.appendChild(root.createTextNode(str(part.qty)))
+            partChild.appendChild(node)
+
+            node = root.createElement('QTYFILLED')
+            node.appendChild(root.createTextNode(str(part.qtyhave)))
+            partChild.appendChild(node)
+
+            inventoryNode.appendChild(partChild)
+
+        filename = "bricklink-wantlists/" + self.ui.setText.text() + ".xml"
+        xml_str = root.toprettyxml(indent ="\t") 
+        with open(filename, "w") as f:
+            f.write(xml_str) 
 
     def showBoth(self):
         self.ui.actionBoth.setChecked(True)
         self.ui.actionHave.setChecked(False)
         self.ui.actionWanted.setChecked(False)
         for part in self.set_pieces:
-                part.widget.show()
+            part.widget.show()
     
     def showWanted(self):
         self.ui.actionBoth.setChecked(False)
@@ -177,7 +235,7 @@ class MainWindow(QMainWindow):
         self.set_pieces = []
         for part in self.sortedresults:
             if (part['is_spare'] is not True):
-                piece = Piece(part["part"]["part_num"], part["color"]["name"], part["part"]["part_img_url"], int(part["quantity"]), part["part"]["name"])
+                piece = Piece(part["part"]["part_num"], part["color"]["name"], part["part"]["part_img_url"], int(part["quantity"]), part["part"]["name"], part["color"]["id"],part['part']['external_ids']['BrickLink'][0],part['color']['external_ids']['BrickLink']['ext_ids'][0])
                 self.set_pieces.append(piece)
         for part in self.set_pieces:
             self.partsLayout.addWidget(part.getWidget())
